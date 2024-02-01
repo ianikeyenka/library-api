@@ -3,6 +3,7 @@ package com.example.bookservice.service.impl;
 import com.example.bookservice.dto.BookDTO;
 import com.example.bookservice.exception.ResourceNotFoundException;
 import com.example.bookservice.mapper.BookMapper;
+import com.example.bookservice.model.BookModel;
 import com.example.bookservice.repository.BookRepository;
 import com.example.bookservice.service.BookService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.example.bookservice.util.Constant.BOOK_NOT_FOUND_BY_ID;
+import static com.example.bookservice.util.Constant.BOOK_NOT_FOUND_BY_ISBN;
 
 @Service
 @RequiredArgsConstructor
@@ -32,14 +36,19 @@ public class BookServiceImpl implements BookService {
     public BookDTO getBookById(Long id) {
         return bookMapper.bookToBookDto(
                 bookRepository.findById(id)
-                        .orElseThrow(() -> new ResourceNotFoundException("")));
+                        .orElseThrow(() -> new ResourceNotFoundException(
+                                String.format(BOOK_NOT_FOUND_BY_ID, id)
+                        )));
     }
 
     @Override
     @Transactional
     public BookDTO getBookByISBN(String isbn) {
-        return bookMapper.bookToBookDto(
-                bookRepository.findByIsbn(isbn));
+        BookModel bookModel = bookRepository.findByIsbn(isbn);
+        if (bookModel == null) {
+            throw new ResourceNotFoundException(String.format(BOOK_NOT_FOUND_BY_ISBN, isbn));
+        }
+        return bookMapper.bookToBookDto(bookModel);
     }
 
     @Override
@@ -54,7 +63,8 @@ public class BookServiceImpl implements BookService {
         BookDTO existingBook = bookMapper
                 .bookToBookDto(bookRepository
                         .findById(id)
-                        .orElseThrow(() -> new ResourceNotFoundException("")));
+                        .orElseThrow(() -> new ResourceNotFoundException(
+                                String.format(BOOK_NOT_FOUND_BY_ID, id))));
         existingBook.setIsbn(bookDTO.getIsbn());
         existingBook.setName(bookDTO.getName());
         existingBook.setDescription(bookDTO.getDescription());
