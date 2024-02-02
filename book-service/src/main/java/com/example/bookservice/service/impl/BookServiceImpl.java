@@ -44,10 +44,8 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public BookDTO getBookByISBN(String isbn) {
-        BookModel bookModel = bookRepository.findByIsbn(isbn);
-        if (bookModel == null) {
-            throw new ResourceNotFoundException(String.format(BOOK_NOT_FOUND_BY_ISBN, isbn));
-        }
+        BookModel bookModel = bookRepository.findByIsbn(isbn).orElseThrow(() ->
+                new ResourceNotFoundException(String.format(BOOK_NOT_FOUND_BY_ISBN, isbn)));
         return bookMapper.bookToBookDto(bookModel);
     }
 
