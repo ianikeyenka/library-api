@@ -2,6 +2,7 @@ package com.example.bookservice.controller;
 
 import com.example.bookservice.dto.BookDTO;
 import com.example.bookservice.service.BookService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,13 +42,13 @@ public class BookController {
     }
 
     @PostMapping("/books")
-    public ResponseEntity<BookDTO> saveBook(@RequestBody BookDTO bookDTO) {
+    public ResponseEntity<BookDTO> saveBook(@Valid @RequestBody BookDTO bookDTO) {
         bookService.addBook(bookDTO);
         return new ResponseEntity<>(bookDTO, HttpStatus.CREATED);
     }
 
     @PutMapping("/books/{id}")
-    public ResponseEntity<BookDTO> updateBook(@PathVariable Long id, @RequestBody BookDTO bookDTO) {
+    public ResponseEntity<BookDTO> updateBook(@PathVariable Long id, @Valid @RequestBody BookDTO bookDTO) {
         bookService.updateBook(id, bookDTO);
         return new ResponseEntity<>(bookDTO, HttpStatus.OK);
     }
