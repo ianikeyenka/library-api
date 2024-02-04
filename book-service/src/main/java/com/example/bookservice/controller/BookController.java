@@ -4,6 +4,7 @@ import com.example.bookservice.dto.BookDTO;
 import com.example.bookservice.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -26,35 +28,41 @@ public class BookController {
 
     @GetMapping("/books")
     public ResponseEntity<List<BookDTO>> getBooks() {
+        log.info("Fetching all books");
         List<BookDTO> bookDTOS = bookService.getBooks();
         return new ResponseEntity<>(bookDTOS, HttpStatus.OK);
     }
     @GetMapping("/books/{id}")
     public ResponseEntity<BookDTO> getBookById(@PathVariable Long id) {
+        log.info("Fetching book with id: {}", id);
         BookDTO bookDTO = bookService.getBookById(id);
         return new ResponseEntity<>(bookDTO, HttpStatus.OK);
     }
 
     @GetMapping("/books/isbn/{isbn}")
     public ResponseEntity<BookDTO> getBookByISBN(@PathVariable String isbn) {
+        log.info("Fetching book with ISBN: {}", isbn);
         BookDTO bookDTO = bookService.getBookByISBN(isbn);
         return new ResponseEntity<>(bookDTO, HttpStatus.OK);
     }
 
     @PostMapping("/books")
     public ResponseEntity<BookDTO> saveBook(@Valid @RequestBody BookDTO bookDTO) {
+        log.info("Saving new book: {}", bookDTO);
         bookService.addBook(bookDTO);
         return new ResponseEntity<>(bookDTO, HttpStatus.CREATED);
     }
 
     @PutMapping("/books/{id}")
     public ResponseEntity<BookDTO> updateBook(@PathVariable Long id, @Valid @RequestBody BookDTO bookDTO) {
+        log.info("Updating book with id: {}", id);
         bookService.updateBook(id, bookDTO);
         return new ResponseEntity<>(bookDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/books/{id}")
     public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
+        log.info("Deleting book with id: {}", id);
         bookService.deleteBook(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
