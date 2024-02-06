@@ -9,7 +9,6 @@ import com.example.bookservice.service.BookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,7 +25,6 @@ public class BookServiceImpl implements BookService {
     private final BookMapper bookMapper;
 
     @Override
-    @Transactional
     public List<BookResponse> getBooks() {
         log.info("Fetching all books");
         return bookRepository.findAll().stream()
@@ -35,7 +33,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Transactional
     public BookResponse getBookById(Long id) {
         log.info("Fetching book with id: {}", id);
         return bookMapper.bookToBookDto(
@@ -46,7 +43,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Transactional
     public BookResponse getBookByISBN(String isbn) {
         log.info("Fetching book with ISBN: {}", isbn);
         Book bookModel = bookRepository.findByIsbn(isbn).orElseThrow(() ->
@@ -55,14 +51,12 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Transactional
     public void saveBook(BookResponse bookDTO) {
         log.info("Adding new book: {}", bookDTO);
         bookRepository.save(bookMapper.bookDtoToBook(bookDTO));
     }
 
     @Override
-    @Transactional
     public void updateBook(Long id, BookResponse bookDTO) {
         log.info("Updating book with id: {}", id);
         BookResponse existingBook = bookMapper
@@ -79,7 +73,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Transactional
     public void deleteBook(Long id) {
         log.info("Deleting book with id: {}", id);
         bookRepository.delete(bookMapper.bookDtoToBook(getBookById(id)));
