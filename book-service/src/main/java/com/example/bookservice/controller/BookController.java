@@ -22,46 +22,46 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/v1/books")
 public class BookController {
 
     private final BookService bookService;
 
-    @GetMapping("/books")
+    @GetMapping
     public ResponseEntity<List<BookResponse>> getBooks() {
         log.info("Fetching all books");
         List<BookResponse> bookResponses = bookService.getBooks();
         return new ResponseEntity<>(bookResponses, HttpStatus.OK);
     }
-    @GetMapping("/books/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<BookResponse> getBookById(@PathVariable Long id) {
         log.info("Fetching book with id: {}", id);
         BookResponse bookResponse = bookService.getBookById(id);
         return new ResponseEntity<>(bookResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/books/isbn/{isbn}")
+    @GetMapping("/isbn/{isbn}")
     public ResponseEntity<BookResponse> getBookByISBN(@PathVariable String isbn) {
         log.info("Fetching book with ISBN: {}", isbn);
         BookResponse bookResponse = bookService.getBookByISBN(isbn);
         return new ResponseEntity<>(bookResponse, HttpStatus.OK);
     }
 
-    @PostMapping("/books")
+    @PostMapping
     public ResponseEntity<BookResponse> saveBook(@Valid @RequestBody BookResponse bookResponse) {
         log.info("Saving new book: {}", bookResponse);
         bookService.addBook(bookResponse);
         return new ResponseEntity<>(bookResponse, HttpStatus.CREATED);
     }
 
-    @PutMapping("/books/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<BookResponse> updateBook(@PathVariable Long id, @Valid @RequestBody BookResponse bookResponse) {
         log.info("Updating book with id: {}", id);
         bookService.updateBook(id, bookResponse);
         return new ResponseEntity<>(bookResponse, HttpStatus.OK);
     }
 
-    @DeleteMapping("/books/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
         log.info("Deleting book with id: {}", id);
         bookService.deleteBook(id);
