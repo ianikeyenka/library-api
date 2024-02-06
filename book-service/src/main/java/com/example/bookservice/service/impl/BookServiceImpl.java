@@ -46,21 +46,17 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void saveBook(BookResponse bookDTO) {
-        log.info("Adding new book: {}", bookDTO);
-        bookRepository.save(bookMapper.bookDtoToBook(bookDTO));
+    public void saveBook(BookResponse bookResponse) {
+        log.info("Adding new book: {}", bookResponse);
+        bookRepository.save(bookMapper.bookDtoToBook(bookResponse));
     }
 
     @Override
-    public void updateBook(Long id, BookResponse bookDTO) {
+    public void updateBook(Long id, BookResponse bookResponse) {
         log.info("Updating book with id: {}", id);
         BookResponse existingBook = bookMapper
                 .bookToBookDto(getBookByIdOrThrow(id));
-        existingBook.setIsbn(bookDTO.getIsbn());
-        existingBook.setName(bookDTO.getName());
-        existingBook.setDescription(bookDTO.getDescription());
-        existingBook.setGenre(bookDTO.getGenre());
-        existingBook.setAuthor(bookDTO.getAuthor());
+        updateExistingBook(existingBook, bookResponse);
         bookRepository.save(bookMapper.bookDtoToBook(existingBook));
     }
 
@@ -80,5 +76,13 @@ public class BookServiceImpl implements BookService {
         return bookRepository.findByIsbn(isbn).orElseThrow(() ->
                 new ResourceNotFoundException(
                         String.format(BOOK_NOT_FOUND_BY_ISBN, isbn)));
+    }
+
+    private void updateExistingBook(BookResponse existingBook, BookResponse newBook) {
+        existingBook.setIsbn(newBook.getIsbn());
+        existingBook.setName(newBook.getName());
+        existingBook.setDescription(newBook.getDescription());
+        existingBook.setGenre(newBook.getGenre());
+        existingBook.setAuthor(newBook.getAuthor());
     }
 }
