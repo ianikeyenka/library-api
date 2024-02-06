@@ -9,4 +9,5 @@ public class Constant {
     public static final String GENRE_SIZE = "Field must be between 1 and 50 characters";
     public static final String DESCRIPTION_SIZE = "Field must be between 1 and 500 characters";
     public static final String AUTHOR_SIZE = "Field must be between 1 and 100 characters";
+    public static final String ISBN_REGEX = "(^\\d{3}-\\d{2}-\\d{5}-\\d{2}-\\d$)";
 }
