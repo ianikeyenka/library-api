@@ -46,18 +46,21 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void saveBook(BookResponse bookResponse) {
+    public BookResponse saveBook(BookResponse bookResponse) {
         log.info("Adding new book: {}", bookResponse);
-        bookRepository.save(bookMapper.bookDtoToBook(bookResponse));
+        Book book = bookMapper.bookDtoToBook(bookResponse);
+        bookRepository.save(book);
+        return bookMapper.bookToBookDto(book);
     }
 
     @Override
-    public void updateBook(Long id, BookResponse bookResponse) {
+    public BookResponse updateBook(Long id, BookResponse bookResponse) {
         log.info("Updating book with id: {}", id);
         BookResponse existingBook = bookMapper
                 .bookToBookDto(getBookByIdOrThrow(id));
         updateExistingBook(existingBook, bookResponse);
         bookRepository.save(bookMapper.bookDtoToBook(existingBook));
+        return existingBook;
     }
 
     @Override

@@ -50,15 +50,15 @@ public class BookController {
     @PostMapping
     public ResponseEntity<BookResponse> saveBook(@Valid @RequestBody BookResponse bookResponse) {
         log.info("Saving new book: {}", bookResponse);
-        bookService.saveBook(bookResponse);
-        return new ResponseEntity<>(bookResponse, HttpStatus.CREATED);
+        BookResponse book = bookService.saveBook(bookResponse);
+        return new ResponseEntity<>(book, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<BookResponse> updateBook(@PathVariable Long id, @Valid @RequestBody BookResponse bookResponse) {
         log.info("Updating book with id: {}", id);
-        bookService.updateBook(id, bookResponse);
-        return new ResponseEntity<>(bookResponse, HttpStatus.OK);
+        BookResponse book = bookService.updateBook(id, bookResponse);
+        return new ResponseEntity<>(book, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
