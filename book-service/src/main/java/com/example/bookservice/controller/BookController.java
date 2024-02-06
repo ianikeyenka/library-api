@@ -50,7 +50,7 @@ public class BookController {
     @PostMapping
     public ResponseEntity<BookResponse> saveBook(@Valid @RequestBody BookResponse bookResponse) {
         log.info("Saving new book: {}", bookResponse);
-        bookService.addBook(bookResponse);
+        bookService.saveBook(bookResponse);
         return new ResponseEntity<>(bookResponse, HttpStatus.CREATED);
     }
 
