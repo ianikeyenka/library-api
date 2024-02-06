@@ -35,18 +35,13 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookResponse getBookById(Long id) {
         log.info("Fetching book with id: {}", id);
-        return bookMapper.bookToBookDto(
-                bookRepository.findById(id)
-                        .orElseThrow(() -> new ResourceNotFoundException(
-                                String.format(BOOK_NOT_FOUND_BY_ID, id)
-                        )));
+        return bookMapper.bookToBookDto(getBookByIdOrThrow(id));
     }
 
     @Override
     public BookResponse getBookByISBN(String isbn) {
         log.info("Fetching book with ISBN: {}", isbn);
-        Book bookModel = bookRepository.findByIsbn(isbn).orElseThrow(() ->
-                new ResourceNotFoundException(String.format(BOOK_NOT_FOUND_BY_ISBN, isbn)));
+        Book bookModel = getBookByIsbnOrThrow(isbn);
         return bookMapper.bookToBookDto(bookModel);
     }
 
@@ -60,10 +55,7 @@ public class BookServiceImpl implements BookService {
     public void updateBook(Long id, BookResponse bookDTO) {
         log.info("Updating book with id: {}", id);
         BookResponse existingBook = bookMapper
-                .bookToBookDto(bookRepository
-                        .findById(id)
-                        .orElseThrow(() -> new ResourceNotFoundException(
-                                String.format(BOOK_NOT_FOUND_BY_ID, id))));
+                .bookToBookDto(getBookByIdOrThrow(id));
         existingBook.setIsbn(bookDTO.getIsbn());
         existingBook.setName(bookDTO.getName());
         existingBook.setDescription(bookDTO.getDescription());
@@ -76,5 +68,17 @@ public class BookServiceImpl implements BookService {
     public void deleteBook(Long id) {
         log.info("Deleting book with id: {}", id);
         bookRepository.delete(bookMapper.bookDtoToBook(getBookById(id)));
+    }
+
+    private Book getBookByIdOrThrow(Long id) {
+        return bookRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException(
+                        String.format(BOOK_NOT_FOUND_BY_ID, id)));
+    }
+
+    private Book getBookByIsbnOrThrow(String isbn) {
+        return bookRepository.findByIsbn(isbn).orElseThrow(() ->
+                new ResourceNotFoundException(
+                        String.format(BOOK_NOT_FOUND_BY_ISBN, isbn)));
     }
 }
