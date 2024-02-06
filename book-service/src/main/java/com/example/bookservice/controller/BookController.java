@@ -1,6 +1,7 @@
 package com.example.bookservice.controller;
 
-import com.example.bookservice.dto.BookDTO;
+
+import com.example.bookservice.dto.BookResponse;
 import com.example.bookservice.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,37 +28,37 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping("/books")
-    public ResponseEntity<List<BookDTO>> getBooks() {
+    public ResponseEntity<List<BookResponse>> getBooks() {
         log.info("Fetching all books");
-        List<BookDTO> bookDTOS = bookService.getBooks();
-        return new ResponseEntity<>(bookDTOS, HttpStatus.OK);
+        List<BookResponse> bookResponses = bookService.getBooks();
+        return new ResponseEntity<>(bookResponses, HttpStatus.OK);
     }
     @GetMapping("/books/{id}")
-    public ResponseEntity<BookDTO> getBookById(@PathVariable Long id) {
+    public ResponseEntity<BookResponse> getBookById(@PathVariable Long id) {
         log.info("Fetching book with id: {}", id);
-        BookDTO bookDTO = bookService.getBookById(id);
-        return new ResponseEntity<>(bookDTO, HttpStatus.OK);
+        BookResponse bookResponse = bookService.getBookById(id);
+        return new ResponseEntity<>(bookResponse, HttpStatus.OK);
     }
 
     @GetMapping("/books/isbn/{isbn}")
-    public ResponseEntity<BookDTO> getBookByISBN(@PathVariable String isbn) {
+    public ResponseEntity<BookResponse> getBookByISBN(@PathVariable String isbn) {
         log.info("Fetching book with ISBN: {}", isbn);
-        BookDTO bookDTO = bookService.getBookByISBN(isbn);
-        return new ResponseEntity<>(bookDTO, HttpStatus.OK);
+        BookResponse bookResponse = bookService.getBookByISBN(isbn);
+        return new ResponseEntity<>(bookResponse, HttpStatus.OK);
     }
 
     @PostMapping("/books")
-    public ResponseEntity<BookDTO> saveBook(@Valid @RequestBody BookDTO bookDTO) {
-        log.info("Saving new book: {}", bookDTO);
-        bookService.addBook(bookDTO);
-        return new ResponseEntity<>(bookDTO, HttpStatus.CREATED);
+    public ResponseEntity<BookResponse> saveBook(@Valid @RequestBody BookResponse bookResponse) {
+        log.info("Saving new book: {}", bookResponse);
+        bookService.addBook(bookResponse);
+        return new ResponseEntity<>(bookResponse, HttpStatus.CREATED);
     }
 
     @PutMapping("/books/{id}")
-    public ResponseEntity<BookDTO> updateBook(@PathVariable Long id, @Valid @RequestBody BookDTO bookDTO) {
+    public ResponseEntity<BookResponse> updateBook(@PathVariable Long id, @Valid @RequestBody BookResponse bookResponse) {
         log.info("Updating book with id: {}", id);
-        bookService.updateBook(id, bookDTO);
-        return new ResponseEntity<>(bookDTO, HttpStatus.OK);
+        bookService.updateBook(id, bookResponse);
+        return new ResponseEntity<>(bookResponse, HttpStatus.OK);
     }
 
     @DeleteMapping("/books/{id}")
