@@ -56,7 +56,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public void addBook(BookResponse bookDTO) {
+    public void saveBook(BookResponse bookDTO) {
         log.info("Adding new book: {}", bookDTO);
         bookRepository.save(bookMapper.bookDtoToBook(bookDTO));
     }

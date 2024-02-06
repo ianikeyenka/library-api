@@ -12,7 +12,7 @@ public interface BookService {
 
     BookResponse getBookByISBN(String isbn);
 
-    void addBook(BookResponse bookDTO);
+    void saveBook(BookResponse bookDTO);
 
     void updateBook(Long id, BookResponse bookDTO);
 
