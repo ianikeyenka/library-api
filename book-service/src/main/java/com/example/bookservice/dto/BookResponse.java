@@ -17,7 +17,7 @@ import static com.example.bookservice.util.Constant.NAME_SIZE;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookDTO {
+public class BookResponse {
 
     private Long id;
 
