@@ -1,12 +1,12 @@
 package com.example.bookservice.mapper;
 
-import com.example.bookservice.dto.BookDTO;
-import com.example.bookservice.model.BookModel;
+import com.example.bookservice.dto.BookResponse;
+import com.example.bookservice.model.Book;
 import org.mapstruct.Mapper;
 
 @Mapper
 public interface BookMapper {
-    BookDTO bookToBookDto(BookModel bookModel);
+    BookResponse bookToBookDto(Book bookModel);
 
-    BookModel bookDtoToBook(BookDTO bookDTO);
+    Book bookDtoToBook(BookResponse bookResponse);
 }
