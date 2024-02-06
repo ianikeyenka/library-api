@@ -19,21 +19,10 @@ public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
     private Long id;
-
-    @Column
     private String isbn;
-
-    @Column
     private String name;
-
-    @Column
     private String genre;
-
-    @Column
     private String description;
-
-    @Column
     private String author;
 }
