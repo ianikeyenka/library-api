@@ -12,6 +12,7 @@ import static com.example.bookservice.util.Constant.DESCRIPTION_SIZE;
 import static com.example.bookservice.util.Constant.FIELD_CANNOT_BE_EMPTY;
 import static com.example.bookservice.util.Constant.GENRE_SIZE;
 import static com.example.bookservice.util.Constant.ISBN_FORMAT_REQUIREMENT;
+import static com.example.bookservice.util.Constant.ISBN_REGEX;
 import static com.example.bookservice.util.Constant.NAME_SIZE;
 
 @Data
@@ -22,7 +23,7 @@ public class BookResponse {
     private Long id;
 
     @NotBlank(message = FIELD_CANNOT_BE_EMPTY)
-    @Pattern(regexp = "(^\\d{3}-\\d{2}-\\d{5}-\\d{2}-\\d$)",
+    @Pattern(regexp = ISBN_REGEX,
             message = ISBN_FORMAT_REQUIREMENT)
     private String isbn;
 
