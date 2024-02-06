@@ -7,6 +7,4 @@ create table books
     isbn        varchar(255),
     name        varchar(255),
     primary key (id)
-)
-
-GO
+);
