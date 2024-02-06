@@ -1,19 +1,20 @@
 package com.example.bookservice.service;
 
-import com.example.bookservice.dto.BookDTO;
+
+import com.example.bookservice.dto.BookResponse;
 
 import java.util.List;
 
 public interface BookService {
-    List<BookDTO> getBooks();
+    List<BookResponse> getBooks();
 
-    BookDTO getBookById(Long id);
+    BookResponse getBookById(Long id);
 
-    BookDTO getBookByISBN(String isbn);
+    BookResponse getBookByISBN(String isbn);
 
-    void addBook(BookDTO bookDTO);
+    void addBook(BookResponse bookDTO);
 
-    void updateBook(Long id, BookDTO bookDTO);
+    void updateBook(Long id, BookResponse bookDTO);
 
     void deleteBook(Long id);
 }
