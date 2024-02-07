@@ -1,3 +1,1 @@
-drop table if exists books cascade
-
-GO
+drop table if exists books cascade;
