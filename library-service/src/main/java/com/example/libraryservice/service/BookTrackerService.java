@@ -9,5 +9,7 @@ public interface BookTrackerService {
 
     List<BookTrackerResponse> getFreeBooks();
 
-    BookTrackerResponse saveToBookTracker(Long bookId);
+    BookTrackerResponse updateBook(Long id, BookTrackerResponse bookTrackerResponse);
+
+    void saveToBookTracker(Long bookId);
 }

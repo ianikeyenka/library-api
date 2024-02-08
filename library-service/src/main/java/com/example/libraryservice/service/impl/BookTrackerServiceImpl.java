@@ -1,6 +1,7 @@
 package com.example.libraryservice.service.impl;
 
 import com.example.libraryservice.dto.BookTrackerResponse;
+import com.example.libraryservice.exception.ResourceNotFoundException;
 import com.example.libraryservice.mapper.BookTrackerMapper;
 import com.example.libraryservice.model.BookTracker;
 import com.example.libraryservice.repository.BookTrackerRepository;
@@ -38,7 +39,17 @@ public class BookTrackerServiceImpl implements BookTrackerService {
     }
 
     @Override
-    public BookTrackerResponse saveToBookTracker(Long bookId) {
+    public BookTrackerResponse updateBook(Long id, BookTrackerResponse bookTrackerResponse) {
+        log.info("Updated book with ID {}", id);
+        BookTrackerResponse existingBook = bookTrackerMapper
+                .bookTrackerToBookTrackerDto(getOrThrow(id));
+        updateExistingBook(existingBook, bookTrackerResponse);
+        bookTrackerRepository.save(bookTrackerMapper.bookTrackerDtoToBookTracker(existingBook));
+        return existingBook;
+    }
+
+    @Override
+    public void saveToBookTracker(Long bookId) {
         log.info("Saving book to book tracker. Book ID: {}", bookId);
         BookTracker bookTracker = BookTracker.builder()
                 .bookId(bookId)
@@ -47,6 +58,17 @@ public class BookTrackerServiceImpl implements BookTrackerService {
                 .build();
         bookTrackerRepository.save(bookTracker);
         log.info("Book saved to book tracker. Book ID: {}", bookId);
-        return bookTrackerMapper.bookTrackerToBookTrackerDto(bookTracker);
+    }
+
+    private BookTracker getOrThrow(Long id) {
+        return bookTrackerRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException(
+                        String.format("Book tracker not found by ID - %s", id)));
+    }
+
+    private void updateExistingBook(BookTrackerResponse existingBook, BookTrackerResponse newBook) {
+        existingBook.setBookId(newBook.getBookId());
+        existingBook.setDateBorrowed(newBook.getDateBorrowed());
+        existingBook.setDateToReturn(newBook.getDateToReturn());
     }
 }
