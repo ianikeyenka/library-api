@@ -8,6 +8,7 @@ import com.example.bookservice.repository.BookRepository;
 import com.example.bookservice.service.BookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
+    private final KafkaTemplate<String, Long> kafkaTemplate;
 
     @Override
     public List<BookResponse> getBooks() {
@@ -50,6 +52,7 @@ public class BookServiceImpl implements BookService {
         log.info("Adding new book: {}", bookResponse);
         Book book = bookMapper.bookDtoToBook(bookResponse);
         bookRepository.save(book);
+        kafkaTemplate.send("bookTrackerTopic", book.getId());
         return bookMapper.bookToBookDto(book);
     }
 
