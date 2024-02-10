@@ -1,6 +1,6 @@
 package com.example.bookservice.controller;
 
-
+import com.example.bookservice.dto.BookListResponse;
 import com.example.bookservice.dto.BookResponse;
 import com.example.bookservice.service.BookService;
 import jakarta.validation.Valid;
@@ -10,14 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -28,43 +26,40 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping
-    public ResponseEntity<List<BookResponse>> getBooks() {
+    public ResponseEntity<BookListResponse> getBooks() {
         log.info("Fetching all books");
-        List<BookResponse> bookResponses = bookService.getBooks();
-        return new ResponseEntity<>(bookResponses, HttpStatus.OK);
+        return ResponseEntity.ok(bookService.getBooks());
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<BookResponse> getBookById(@PathVariable Long id) {
         log.info("Fetching book with id: {}", id);
-        BookResponse bookResponse = bookService.getBookById(id);
-        return new ResponseEntity<>(bookResponse, HttpStatus.OK);
+        return ResponseEntity.ok(bookService.getBookById(id));
     }
 
     @GetMapping("/isbn/{isbn}")
     public ResponseEntity<BookResponse> getBookByISBN(@PathVariable String isbn) {
         log.info("Fetching book with ISBN: {}", isbn);
-        BookResponse bookResponse = bookService.getBookByISBN(isbn);
-        return new ResponseEntity<>(bookResponse, HttpStatus.OK);
+        return ResponseEntity.ok(bookService.getBookByISBN(isbn));
     }
 
     @PostMapping
     public ResponseEntity<BookResponse> saveBook(@Valid @RequestBody BookResponse bookResponse) {
         log.info("Saving new book: {}", bookResponse);
-        BookResponse book = bookService.saveBook(bookResponse);
-        return new ResponseEntity<>(book, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(bookService.saveBook(bookResponse));
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<BookResponse> updateBook(@PathVariable Long id, @Valid @RequestBody BookResponse bookResponse) {
         log.info("Updating book with id: {}", id);
-        BookResponse book = bookService.updateBook(id, bookResponse);
-        return new ResponseEntity<>(book, HttpStatus.OK);
+        return ResponseEntity.ok(bookService.updateBook(id, bookResponse));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<BookResponse> deleteBook(@PathVariable Long id) {
         log.info("Deleting book with id: {}", id);
-        BookResponse bookResponse = bookService.deleteBook(id);
-        return new ResponseEntity<>(bookResponse, HttpStatus.NO_CONTENT);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(bookService.deleteBook(id));
     }
 }
