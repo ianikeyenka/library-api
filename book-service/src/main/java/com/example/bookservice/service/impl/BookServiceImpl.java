@@ -1,5 +1,6 @@
 package com.example.bookservice.service.impl;
 
+import com.example.bookservice.dto.BookListResponse;
 import com.example.bookservice.dto.BookResponse;
 import com.example.bookservice.exception.ResourceNotFoundException;
 import com.example.bookservice.mapper.BookMapper;
@@ -10,8 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.example.bookservice.util.Constant.BOOK_NOT_FOUND_BY_ID;
@@ -27,11 +28,12 @@ public class BookServiceImpl implements BookService {
     private final KafkaTemplate<String, Long> kafkaTemplate;
 
     @Override
-    public List<BookResponse> getBooks() {
+    public BookListResponse getBooks() {
         log.info("Fetching all books");
-        return bookRepository.findAll().stream()
+        return new BookListResponse(
+                bookRepository.findAll().stream()
                 .map(bookMapper::bookToBookDto)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
     @Override
@@ -47,7 +49,14 @@ public class BookServiceImpl implements BookService {
         return bookMapper.bookToBookDto(bookModel);
     }
 
+    private Book getBookByIsbnOrThrow(String isbn) {
+        return bookRepository.findByIsbn(isbn).orElseThrow(() ->
+                new ResourceNotFoundException(
+                        String.format(BOOK_NOT_FOUND_BY_ISBN, isbn)));
+    }
+
     @Override
+    @Transactional
     public BookResponse saveBook(BookResponse bookResponse) {
         log.info("Adding new book: {}", bookResponse);
         Book book = bookMapper.bookDtoToBook(bookResponse);
@@ -66,6 +75,14 @@ public class BookServiceImpl implements BookService {
         return existingBook;
     }
 
+    private void updateExistingBook(BookResponse existingBook, BookResponse newBook) {
+        existingBook.setIsbn(newBook.getIsbn());
+        existingBook.setName(newBook.getName());
+        existingBook.setDescription(newBook.getDescription());
+        existingBook.setGenre(newBook.getGenre());
+        existingBook.setAuthor(newBook.getAuthor());
+    }
+
     @Override
     public BookResponse deleteBook(Long id) {
         log.info("Deleting book with id: {}", id);
@@ -78,19 +95,5 @@ public class BookServiceImpl implements BookService {
         return bookRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(
                         String.format(BOOK_NOT_FOUND_BY_ID, id)));
-    }
-
-    private Book getBookByIsbnOrThrow(String isbn) {
-        return bookRepository.findByIsbn(isbn).orElseThrow(() ->
-                new ResourceNotFoundException(
-                        String.format(BOOK_NOT_FOUND_BY_ISBN, isbn)));
-    }
-
-    private void updateExistingBook(BookResponse existingBook, BookResponse newBook) {
-        existingBook.setIsbn(newBook.getIsbn());
-        existingBook.setName(newBook.getName());
-        existingBook.setDescription(newBook.getDescription());
-        existingBook.setGenre(newBook.getGenre());
-        existingBook.setAuthor(newBook.getAuthor());
     }
 }

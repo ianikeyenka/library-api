@@ -1,12 +1,13 @@
 package com.example.bookservice.service;
 
 
+import com.example.bookservice.dto.BookListResponse;
 import com.example.bookservice.dto.BookResponse;
 
 import java.util.List;
 
 public interface BookService {
-    List<BookResponse> getBooks();
+    BookListResponse getBooks();
 
     BookResponse getBookById(Long id);
 
