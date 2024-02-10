@@ -14,11 +14,12 @@ public class BookExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponseInformation> handleResourceNotFoundException(ResourceNotFoundException ex) {
-        ErrorResponseInformation errorResponse = new ErrorResponseInformation(
-                HttpStatus.NOT_FOUND.value(),
-                new Date(),
-                List.of(ex.getMessage()));
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        ErrorResponseInformation errorResponse = ErrorResponseInformation.builder()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .timestamp(new Date())
+                .message(List.of(ex.getMessage()))
+                .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -28,10 +29,11 @@ public class BookExceptionHandler {
                 .stream()
                 .map(x -> x.getField() + ": " + x.getDefaultMessage())
                 .toList();
-        ErrorResponseInformation errorDetails = new ErrorResponseInformation(
-                HttpStatus.BAD_REQUEST.value(),
-                new Date(),
-                errors);
-        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+        ErrorResponseInformation errorDetails = ErrorResponseInformation.builder()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .timestamp(new Date())
+                .message(errors)
+                .build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDetails);
     }
 }
