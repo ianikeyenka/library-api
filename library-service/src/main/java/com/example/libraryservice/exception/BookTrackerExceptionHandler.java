@@ -15,10 +15,11 @@ public class BookTrackerExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponseInformation> handleResourceNotFoundException(ResourceNotFoundException ex) {
-        ErrorResponseInformation errorResponse = new ErrorResponseInformation(
-                HttpStatus.NOT_FOUND.value(),
-                new Date(),
-                List.of(ex.getMessage()));
+        ErrorResponseInformation errorResponse =  ErrorResponseInformation.builder()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .timestamp(new Date())
+                .message(List.of(ex.getMessage()))
+                .build();
         log.error("Resource not found: {}", ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
