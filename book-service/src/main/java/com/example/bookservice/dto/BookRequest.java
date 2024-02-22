@@ -19,7 +19,6 @@ import static com.example.bookservice.util.Constant.NAME_SIZE;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookRequest {
-    private Long id;
 
     @NotBlank(message = FIELD_CANNOT_BE_EMPTY)
     @Pattern(regexp = ISBN_REGEX,

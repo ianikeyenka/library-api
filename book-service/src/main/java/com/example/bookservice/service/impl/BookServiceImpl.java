@@ -1,5 +1,6 @@
 package com.example.bookservice.service.impl;
 
+import com.example.bookservice.config.KafkaProducer;
 import com.example.bookservice.dto.BookListResponse;
 import com.example.bookservice.dto.BookRequest;
 import com.example.bookservice.dto.BookResponse;
@@ -10,7 +11,6 @@ import com.example.bookservice.repository.BookRepository;
 import com.example.bookservice.service.BookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +27,7 @@ public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
-    private final KafkaTemplate<String, Long> kafkaTemplate;
+    private final KafkaProducer kafkaProducer;
 
     @Override
     public BookListResponse getBooks() {
@@ -64,7 +64,7 @@ public class BookServiceImpl implements BookService {
         Book book = bookMapper.bookDtoToBook(bookRequest);
         existingIsbn(book.getIsbn());
         bookRepository.save(book);
-        kafkaTemplate.send("bookTrackerTopic", book.getId());
+        kafkaProducer.sendBookId("bookTrackerTopic", book.getId());
         return bookMapper.bookToBookDto(book);
     }
 
@@ -72,7 +72,7 @@ public class BookServiceImpl implements BookService {
     public BookResponse updateBook(Long id, BookRequest bookRequest) {
         log.info("Updating book with id: {}", id);
         Book existingBook = getBookByIdOrThrow(id);
-        updateExistingBook(existingBook, bookRequest);
+        existingBook = updateExistingBook(existingBook, bookRequest);
         existingIsbn(existingBook.getIsbn());
         bookRepository.save(existingBook);
         return bookMapper.bookToBookDto(existingBook);
@@ -86,12 +86,15 @@ public class BookServiceImpl implements BookService {
         }
     }
 
-    private void updateExistingBook(Book existingBook, BookRequest newBook) {
-        existingBook.setIsbn(newBook.getIsbn());
-        existingBook.setName(newBook.getName());
-        existingBook.setDescription(newBook.getDescription());
-        existingBook.setGenre(newBook.getGenre());
-        existingBook.setAuthor(newBook.getAuthor());
+    private Book updateExistingBook(Book existingBook, BookRequest newBook) {
+        return Book.builder()
+                .id(existingBook.getId())
+                .isbn(newBook.getIsbn())
+                .name(newBook.getName())
+                .description(newBook.getDescription())
+                .genre(newBook.getGenre())
+                .author(newBook.getAuthor())
+                .build();
     }
 
     @Override
