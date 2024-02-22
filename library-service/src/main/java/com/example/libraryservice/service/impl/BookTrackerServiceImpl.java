@@ -38,7 +38,7 @@ public class BookTrackerServiceImpl implements BookTrackerService {
     public BookTrackerListResponse getFreeBooks() {
         log.info("Getting free books");
         return new BookTrackerListResponse(bookTrackerRepository
-                .findFreeBooks()
+                .findByDateToReturnBeforeAndDateBorrowedIsNotNull(LocalDate.now())
                 .stream()
                 .map(bookTrackerMapper::bookTrackerToBookTrackerDto)
                 .collect(Collectors.toList()));
