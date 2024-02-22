@@ -1,6 +1,7 @@
 package com.example.libraryservice.controller;
 
 import com.example.libraryservice.dto.BookTrackerListResponse;
+import com.example.libraryservice.dto.BookTrackerRequest;
 import com.example.libraryservice.dto.BookTrackerResponse;
 import com.example.libraryservice.service.BookTrackerService;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -30,14 +30,14 @@ public class BookTrackerController {
     }
 
     @GetMapping("/free")
-    public ResponseEntity<List<BookTrackerResponse>> getFreeBooks() {
+    public ResponseEntity<BookTrackerListResponse> getFreeBooks() {
         log.info("Fetching free books");
         return ResponseEntity.ok(bookTrackerService.getFreeBooks());
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<BookTrackerResponse> updateBook(@PathVariable Long id, @RequestBody BookTrackerResponse bookTrackerResponse) {
+    public ResponseEntity<BookTrackerResponse> updateBook(@PathVariable Long id, @RequestBody BookTrackerRequest bookTrackerRequest) {
         log.info("Updating book with id: {}", id);
-        return ResponseEntity.ok(bookTrackerService.updateBook(id, bookTrackerResponse));
+        return ResponseEntity.ok(bookTrackerService.updateBook(id, bookTrackerRequest));
     }
 }

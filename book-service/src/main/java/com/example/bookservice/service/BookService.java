@@ -2,9 +2,8 @@ package com.example.bookservice.service;
 
 
 import com.example.bookservice.dto.BookListResponse;
+import com.example.bookservice.dto.BookRequest;
 import com.example.bookservice.dto.BookResponse;
-
-import java.util.List;
 
 public interface BookService {
     BookListResponse getBooks();
@@ -13,9 +12,9 @@ public interface BookService {
 
     BookResponse getBookByISBN(String isbn);
 
-    BookResponse saveBook(BookResponse bookResponse);
+    BookResponse saveBook(BookRequest bookRequest);
 
-    BookResponse updateBook(Long id, BookResponse bookResponse);
+    BookResponse updateBook(Long id, BookRequest bookRequest);
 
     BookResponse deleteBook(Long id);
 }

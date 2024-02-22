@@ -7,6 +7,4 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface BookTrackerMapper {
     BookTrackerResponse bookTrackerToBookTrackerDto(BookTracker bookTracker);
-
-    BookTracker bookTrackerDtoToBookTracker(BookTrackerResponse bookTrackerResponse);
 }

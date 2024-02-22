@@ -1,6 +1,7 @@
 package com.example.libraryservice.service.impl;
 
 import com.example.libraryservice.dto.BookTrackerListResponse;
+import com.example.libraryservice.dto.BookTrackerRequest;
 import com.example.libraryservice.dto.BookTrackerResponse;
 import com.example.libraryservice.exception.ResourceNotFoundException;
 import com.example.libraryservice.mapper.BookTrackerMapper;
@@ -12,8 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.example.libraryservice.util.Constant.BOOK_TRACKER_NOT_FOUND_BY_ID;
 
 @Slf4j
 @Service
@@ -27,34 +29,31 @@ public class BookTrackerServiceImpl implements BookTrackerService {
     public BookTrackerListResponse getBookTrackers() {
         log.info("Getting all book trackers");
         return new BookTrackerListResponse(
-                bookTrackerRepository
-                        .findAll()
-                        .stream()
+                bookTrackerRepository.findAll().stream()
                         .map(bookTrackerMapper::bookTrackerToBookTrackerDto)
                         .collect(Collectors.toList()));
     }
 
     @Override
-    public List<BookTrackerResponse> getFreeBooks() {
+    public BookTrackerListResponse getFreeBooks() {
         log.info("Getting free books");
-        return bookTrackerRepository
+        return new BookTrackerListResponse(bookTrackerRepository
                 .findFreeBooks()
                 .stream()
                 .map(bookTrackerMapper::bookTrackerToBookTrackerDto)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
     @Override
-    public BookTrackerResponse updateBook(Long id, BookTrackerResponse bookTrackerResponse) {
+    public BookTrackerResponse updateBook(Long id, BookTrackerRequest bookTrackerRequest) {
         log.info("Updated book with ID {}", id);
-        BookTrackerResponse existingBook = bookTrackerMapper
-                .bookTrackerToBookTrackerDto(getOrThrow(id));
-        updateExistingBook(existingBook, bookTrackerResponse);
-        bookTrackerRepository.save(bookTrackerMapper.bookTrackerDtoToBookTracker(existingBook));
-        return existingBook;
+        BookTracker existingBook = getOrThrow(id);
+        updateExistingBook(existingBook, bookTrackerRequest);
+        bookTrackerRepository.save(existingBook);
+        return bookTrackerMapper.bookTrackerToBookTrackerDto(existingBook);
     }
 
-    private void updateExistingBook(BookTrackerResponse existingBook, BookTrackerResponse newBook) {
+    private void updateExistingBook(BookTracker existingBook, BookTrackerRequest newBook) {
         existingBook.setBookId(newBook.getBookId());
         existingBook.setDateBorrowed(newBook.getDateBorrowed());
         existingBook.setDateToReturn(newBook.getDateToReturn());
@@ -75,6 +74,6 @@ public class BookTrackerServiceImpl implements BookTrackerService {
     private BookTracker getOrThrow(Long id) {
         return bookTrackerRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(
-                        String.format("Book tracker not found by ID - %s", id)));
+                        String.format(BOOK_TRACKER_NOT_FOUND_BY_ID, id)));
     }
 }

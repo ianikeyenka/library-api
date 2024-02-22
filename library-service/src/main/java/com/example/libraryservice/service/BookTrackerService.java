@@ -1,16 +1,15 @@
 package com.example.libraryservice.service;
 
 import com.example.libraryservice.dto.BookTrackerListResponse;
+import com.example.libraryservice.dto.BookTrackerRequest;
 import com.example.libraryservice.dto.BookTrackerResponse;
-
-import java.util.List;
 
 public interface BookTrackerService {
     BookTrackerListResponse getBookTrackers();
 
-    List<BookTrackerResponse> getFreeBooks();
+    BookTrackerListResponse getFreeBooks();
 
-    BookTrackerResponse updateBook(Long id, BookTrackerResponse bookTrackerResponse);
+    BookTrackerResponse updateBook(Long id, BookTrackerRequest bookTrackerRequest);
 
     void saveToBookTracker(Long bookId);
 }

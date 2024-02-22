@@ -5,5 +5,5 @@ CREATE TABLE book_trackers
     date_borrowed  DATE,
     date_to_return DATE,
     PRIMARY KEY (id),
-    FOREIGN KEY (book_id) REFERENCES books(id)
+    FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
 );

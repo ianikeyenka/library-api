@@ -1,6 +1,7 @@
 package com.example.bookservice.controller;
 
 import com.example.bookservice.dto.BookListResponse;
+import com.example.bookservice.dto.BookRequest;
 import com.example.bookservice.dto.BookResponse;
 import com.example.bookservice.service.BookService;
 import jakarta.validation.Valid;
@@ -44,16 +45,16 @@ public class BookController {
     }
 
     @PostMapping
-    public ResponseEntity<BookResponse> saveBook(@Valid @RequestBody BookResponse bookResponse) {
-        log.info("Saving new book: {}", bookResponse);
+    public ResponseEntity<BookResponse> saveBook(@Valid @RequestBody BookRequest bookRequest) {
+        log.info("Saving new book: {}", bookRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(bookService.saveBook(bookResponse));
+                .body(bookService.saveBook(bookRequest));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BookResponse> updateBook(@PathVariable Long id, @Valid @RequestBody BookResponse bookResponse) {
+    public ResponseEntity<BookResponse> updateBook(@PathVariable Long id, @Valid @RequestBody BookRequest bookRequest) {
         log.info("Updating book with id: {}", id);
-        return ResponseEntity.ok(bookService.updateBook(id, bookResponse));
+        return ResponseEntity.ok(bookService.updateBook(id, bookRequest));
     }
 
     @DeleteMapping("/{id}")
