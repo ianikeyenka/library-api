@@ -16,9 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;
 
-import static com.example.bookservice.util.Constant.BOOK_NOT_FOUND_BY_ID;
-import static com.example.bookservice.util.Constant.BOOK_NOT_FOUND_BY_ISBN;
-import static com.example.bookservice.util.Constant.BOOK_WITH_ISBN_ALREADY_EXIST;
+import static com.example.bookservice.util.Constant.*;
 
 @Slf4j
 @Service

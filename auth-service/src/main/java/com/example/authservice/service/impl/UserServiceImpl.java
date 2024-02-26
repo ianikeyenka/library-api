@@ -21,10 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 
-import static com.example.authservice.util.Constant.REGISTERED_SUCCESSFULLY;
-import static com.example.authservice.util.Constant.ROLE_NOT_FOUND;
-import static com.example.authservice.util.Constant.USER;
-import static com.example.authservice.util.Constant.USER_EXISTS;
+import static com.example.authservice.util.Constant.*;
 
 @Service
 @RequiredArgsConstructor
