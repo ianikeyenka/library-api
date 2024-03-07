@@ -2,8 +2,8 @@
 version: '3'
 services:
   zookeeper:
-    networks:
-      - library-api
+#    networks:
+#      - library-api
     image: confluentinc/cp-zookeeper:7.0.1
     container_name: zookeeper
     environment:
@@ -11,8 +11,8 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
 
   broker:
-    networks:
-      - library-api
+#    networks:
+#      - library-api
     image: confluentinc/cp-kafka:7.0.1
     container_name: broker
     ports:
@@ -30,8 +30,8 @@ services:
 
   # Postgresql
   postgres:
-    networks:
-      - library-api
+#    networks:
+#      - library-api
     container_name: postgres
     image: postgres
     environment:
@@ -43,8 +43,8 @@ services:
 
   # Keycloak
   keycloak:
-    networks:
-      - library-api
+#    networks:
+#      - library-api
     image: quay.io/keycloak/keycloak:24.0.0
     container_name: keycloak
     environment:
@@ -58,67 +58,67 @@ services:
       - start-dev
       - --import-realm
 
-  #  Discovery-server
-  discovery-server:
-    container_name: discovery-server
-    image: discovery-server
-    ports:
-      - "8761:8761"
-    networks:
-      - library-api
-
-  # TODO: fix api-gateway
-  #  Api-gateway
-  api-gateway:
-    image: api-gateway
-    container_name: api-gateway
-    ports:
-      - "8080:8080"
-    networks:
-      - library-api
-    environment:
-      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-server:8761/eureka
-      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENT_SECRET=kkOpxkh4kEmb0remraSYVGYHxHEu22Er
-      - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER_URI=http://keycloak:8181/realms/library-api-realm
-    depends_on:
-      - discovery-server
-
-  # Book-service
-  book-service:
-    image: book-service
-    container_name: book-service
-    ports:
-      - "6060:6060"
-    networks:
-      - library-api
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/library
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=root
-      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-server:8761/eureka
-    depends_on:
-      - postgres
-      - broker
-      - discovery-server
-
-  # Library-service
-  library-service:
-    networks:
-      - library-api
-    image: library-service
-    container_name: library-service
-    ports:
-      - "7070:7070"
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/library
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=root
-      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-server:8761/eureka
-    depends_on:
-      - postgres
-      - broker
-      - discovery-server
-
-networks:
-  library-api:
-    driver: bridge
+#  #  Discovery-server
+#  discovery-server:
+#    container_name: discovery-server
+#    image: discovery-server
+#    ports:
+#      - "8761:8761"
+#    networks:
+#      - library-api
+#
+#  # TODO: fix api-gateway
+#  #  Api-gateway
+#  api-gateway:
+#    image: api-gateway
+#    container_name: api-gateway
+#    ports:
+#      - "8080:8080"
+#    networks:
+#      - library-api
+#    environment:
+#      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-server:8761/eureka
+#      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENT_SECRET=P1MmJr7FnCmEwJjT8SFXd60CLgNhHgKC
+#      - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER_URI=http://keycloak:8181/realms/library-api-realm
+#    depends_on:
+#      - discovery-server
+#
+#  # Book-service
+#  book-service:
+#    image: book-service
+#    container_name: book-service
+#    ports:
+#      - "6060:6060"
+#    networks:
+#      - library-api
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/library
+#      - SPRING_DATASOURCE_USERNAME=postgres
+#      - SPRING_DATASOURCE_PASSWORD=root
+#      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-server:8761/eureka
+#    depends_on:
+#      - postgres
+#      - broker
+#      - discovery-server
+#
+#  # Library-service
+#  library-service:
+#    networks:
+#      - library-api
+#    image: library-service
+#    container_name: library-service
+#    ports:
+#      - "7070:7070"
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/library
+#      - SPRING_DATASOURCE_USERNAME=postgres
+#      - SPRING_DATASOURCE_PASSWORD=root
+#      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-server:8761/eureka
+#    depends_on:
+#      - postgres
+#      - broker
+#      - discovery-server
+#
+#networks:
+#  library-api:
+#    driver: bridge
